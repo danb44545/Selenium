@@ -1,0 +1,66 @@
+#GUI to control chrome using selenium
+# potentially useful for testing single page apps where you need to wait for stuff to load
+# let it load, then click a button in the gui and run the code in the click_event
+
+
+import wx
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+#load chrome on startup, set 'driver' as global
+driver = webdriver.Chrome()
+
+class Example(wx.Frame):
+
+    def __init__(self, *args, **kw):
+        super(Example, self).__init__(*args, **kw)
+
+        self.InitUI()
+
+    def InitUI(self):
+
+        pnl = wx.Panel(self)
+        closeButton = wx.Button(pnl, label='Close', pos=(20, 20))
+
+        closeButton.Bind(wx.EVT_BUTTON, self.OnClose)
+
+        self.SetSize((350, 250))
+        self.SetTitle('wx.Button')
+        self.Centre()
+
+        chromeButton = wx.Button(pnl, label='Run Chrome', pos=(20,60))
+        chromeButton.Bind(wx.EVT_BUTTON, self.RunChrome)
+        self.SetSize((350,250))
+        self.SetTitle('wx.Button2')
+        self.Centre()
+
+
+    def OnClose(self, e):
+
+        self.Close(True)
+
+    def RunChrome(self,e):
+        driver.get("https://www.google.com")
+
+        search_box = driver.find_element_by_name('q')  # Find search input box.
+        search_box.send_keys('selenium')  # Type in selenium.
+        search_box.send_keys(Keys.RETURN)  # Press ENTER.
+
+        #self.Close(True)
+
+
+
+
+
+def main():
+    #load chrome on startup
+
+
+    app = wx.App()
+    ex = Example(None)
+    ex.Show()
+    app.MainLoop()
+
+
+if __name__ == '__main__':
+    main()
